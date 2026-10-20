@@ -1,0 +1,17 @@
+# Chặn dữ liệu CSV nặng (không đẩy lên GitHub)
+data/*.csv
+data/*.zip
+
+# Chặn môi trường ảo Python
+.venv/
+venv/
+
+# Chặn bộ nhớ đệm của Python và pytest
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Chặn cấu hình riêng của hệ điều hành và editor
+.vscode/
+.DS_Store
+Thumbs.db
