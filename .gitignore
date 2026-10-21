@@ -1,4 +1,5 @@
 # Chặn dữ liệu CSV nặng (không đẩy lên GitHub)
+data/raw
 data/*.csv
 data/*.zip
 

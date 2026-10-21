@@ -11,3 +11,5 @@
 1. Cài đặt các thư viện cần thiết:
    ```bash
    pip install -r requirements.txt
+2. Tải data set từ web chính chủ của UCI và đặt vào data/raw dưới tên "PhiUSIIL_Phishing_URL_Dataset.csv"
+   Link download: https://archive.ics.uci.edu/dataset/967/phiusiil+phishing+url+dataset
