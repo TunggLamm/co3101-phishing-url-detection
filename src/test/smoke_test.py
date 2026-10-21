@@ -52,12 +52,13 @@ def main():
         )
 
     # Official UCI convention:
-    # 0 = phishing, 1 = legitimate.
-    y_true = df["label"].astype(int)
+    # 0 = phishing, 1 = legitimate. (in raw csv file)
+    # 1 = Phishing, 0 = legitimate.
+    y_true = (df["label"] == 0).astype(int)
 
     # 5. Apply the proposed one-line rule.
-    # Starts with https://www. -> predict legitimate (1).
-    # Otherwise               -> predict phishing (0).
+    # Starts with https://www. -> predict legitimate (0).
+    # Otherwise               -> predict phishing (1).
     url_has_prefix = (
         df["URL"]
         .fillna("")
@@ -65,10 +66,10 @@ def main():
         .str.startswith("https://www.")
     )
 
-    y_pred = url_has_prefix.astype(int)
+    y_pred = (~url_has_prefix).astype(int)
 
     # 6. Check the rule's key assumption on legitimate URLs.
-    legitimate_mask = y_true == 1
+    legitimate_mask = y_true == 0
     legitimate_count = int(legitimate_mask.sum())
     legitimate_matching = int(
         (legitimate_mask & url_has_prefix).sum()
@@ -81,7 +82,7 @@ def main():
     )
 
     print("\n--- One-line rule assumption check ---")
-    print(f"Legitimate URLs: {legitimate_count:,}")
+    print(f"Legitimate URLs (Negative = 0): {legitimate_count:,}")
     print(
         "Legitimate URLs starting with https://www.: "
         f"{legitimate_matching:,}"
@@ -93,7 +94,7 @@ def main():
 
     # 7. Evaluate predictions.
     print("\n--- Confusion matrix ---")
-    print("Order: phishing (0), legitimate (1)")
+    print("Order: legitimate (0 - Negative), phishing (1 - Positive)")
     print("[ TN  FP ]\n[ FN TP ]")
     print(confusion_matrix(y_true, y_pred, labels=[0, 1]))
 
@@ -103,7 +104,8 @@ def main():
             y_true,
             y_pred,
             labels=[0, 1],
-            target_names=["Phishing", "Legitimate"],
+            target_names=["Legitimate (0)", "Phishing (1)"],
+            digits = 4,
             zero_division=0,
         )
     )
