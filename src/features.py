@@ -43,41 +43,41 @@ SELECTED_LEXICAL_FEATURES = [
 
 # GIẢI THÍCH Ý NGHĨA 10 ĐẶC TRƯNG
 FEATURE_DESCRIPTIONS = {
-    "URLLength": "Tổng độ dài chuỗi URL",
-    "DomainLength": "Độ dài phần tên miền",
-    "IsDomainIP": "Tên miền là địa chỉ IP (0/1)",
-    "NoOfSubDomain": "Số lượng tên miền phụ (subdomain)",
-    "HasObfuscation": "Có làm rối/mã hóa ký tự (0/1)",
-    "LetterRatioInURL": "Tỉ lệ chữ cái trên URL",
-    "DegitRatioInURL": "Tỉ lệ chữ số trên URL",
-    "NoOfEqualsInURL": "Số lượng dấu bằng '='",
-    "NoOfQMarkInURL": "Số lượng dấu chấm hỏi '?'",
-    "SpacialCharRatioInURL": "Tỉ lệ ký tự đặc biệt trên URL",
+    "URLLength": "Total URL length",
+    "DomainLength": "Domain name length",
+    "IsDomainIP": "Domain is an IP address (0/1)",
+    "NoOfSubDomain": "Number of subdomains",
+    "HasObfuscation": "Contains obfuscation (0/1)",
+    "LetterRatioInURL": "Letter ratio in URL",
+    "DegitRatioInURL": "Digit ratio in URL",
+    "NoOfEqualsInURL": "Number of '=' characters",
+    "NoOfQMarkInURL": "Number of '?' characters",
+    "SpacialCharRatioInURL": "Special character ratio in URL",
 }
 
 def select_lexical_features(df: pd.DataFrame):
     """
-    Hàm dùng chung cho các module huấn luyện (Logistic Regression / Gradient Boosting):
-    - Đầu vào: DataFrame gốc độc từ CSV PhiUSIIL
-    - Đầu ra:
-        + X (pd.DataFrame): Ma trận chỉ gồm 10 cột đặc trưng từ vựng cốt lõi
-        + y (pd.Series): Nhãn đã chuẩn hóa (1 = Phishing, 0 = Legitimate)
+    Extract the 10 core lexical features and standardize the target label.
+
+    Returns:
+        X (pd.DataFrame): Feature matrix with 10 lexical columns.
+        y (pd.Series): Standardized binary labels (1 = Phishing, 0 = Legitimate).
     """
 
     # kiểm tra xem có thiếu cột nào trong 10 cột bắt buộc không
     missing_cols = set(SELECTED_LEXICAL_FEATURES) - set(df.columns)
     if missing_cols:
-        raise ValueError(f"Thiếu các cột đặc trưng bắt buộc: {missing_cols}")
+        raise ValueError(f"Missing required feature columns: {missing_cols}")
 
     if "label" not in df.columns:
-        raise ValueError("Không tìm thấy cột 'label' trong DataFrame.")
+        raise ValueError("Column 'label' not found in DataFrame.")
 
     # trích xuất đúng 10 cột đặc trưng
     X = df[SELECTED_LEXICAL_FEATURES].copy()
 
     # đảm bảo không có giá trị trống
     if X.isna().any().any():
-        raise ValueError("Phát hiện giá trị NaN trong 10 cột đặc trưng từ vựng")
+        raise ValueError("NaN values detected in the selected lexical features.")
 
     # chuẩn hóa nhãn
     y = (df["label"] == 0).astype(int)
@@ -86,8 +86,8 @@ def select_lexical_features(df: pd.DataFrame):
 
 def main():
     if not DATA_PATH.is_file():
-        raise FileNotFoundError(f"Không tìm thấy dataset tại: {DATA_PATH}")
-    print("Đang tải bộ dữ liệu PhiUSIIL...")
+        raise FileNotFoundError(f"Dataset not found at: {DATA_PATH}")
+    print("Loading PhiUSIIL dataset...")
     df = pd.read_csv(DATA_PATH)
     X, y = select_lexical_features(df)
 
@@ -100,28 +100,23 @@ def main():
     )
     html_cols = [c for c in df.columns if c not in known_non_html]
 
-    print("\n================ BÁO CÁO LỌC ĐẶC TRƯNG (FEATURE SELECTION) ================")
-    print(f"Tổng số cột ban đầu trong Dataset             : {df.shape[1]} cột")
-    print(f"  [-] Cột định danh & nhãn (ID/Label) : -{len(ID_AND_LABEL_COLS)} cột")
-    print(f"  [-] Cột nội dung HTML/DOM ngoại lai : -{len(html_cols)} cột")
-    print(f"  [-] Cột chữ thô & Rò rỉ nhãn        : -{len(LEAKAGE_AND_RAW_COLS)} cột")
-    print(f"  [-] Cột từ vựng trùng lặp/đa cộng tuyến: -{len(REDUNDANT_LEXICAL_COLS)} cột")
-    print("---------------------------------------------------------------------------")
-    print(f"  [=] SỐ ĐẶC TRƯNG TỪ VỰNG CỐT LÕI ĐƯỢC CHỌN   : {X.shape[1]} cột")
-    print("===========================================================================")
+    print("\n================ FEATURE SELECTION SUMMARY ================")
+    print(f"Total initial columns in dataset : {df.shape[1]}")
+    print(f"Selected core lexical features   : {X.shape[1]}")
+    print("===========================================================")
 
     # tạo bảng so sánh giá trị trung bình của từng đặc trưng giữa nhóm phishing và legitimate
     legit_mean = X[y == 0].mean()
     phish_mean = X[y == 1].mean()
 
     report_df = pd.DataFrame({
-        "Ý nghĩa": [FEATURE_DESCRIPTIONS[col] for col in SELECTED_LEXICAL_FEATURES],
+        "Description": [FEATURE_DESCRIPTIONS[col] for col in SELECTED_LEXICAL_FEATURES],
         "Avg Legit (0)": [round(legit_mean[col], 4) for col in SELECTED_LEXICAL_FEATURES],
         "Avg Phish (1)": [round(phish_mean[col], 4) for col in SELECTED_LEXICAL_FEATURES],
-        "Std toàn tập": [round(X[col].std(), 4) for col in SELECTED_LEXICAL_FEATURES],
+        "Overall Std": [round(X[col].std(), 4) for col in SELECTED_LEXICAL_FEATURES],
     }, index = SELECTED_LEXICAL_FEATURES)
 
-    print("\n--- Bảng thống kê 10 đặc trưng từ vựng (So sánh trung bình Legitimate vs Phishing) ---")
+    print("\n--- Lexical Features Summary (Legitimate vs Phishing Mean) ---")
     print(report_df.to_string())
 
 if __name__ == "__main__":
