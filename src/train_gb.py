@@ -3,11 +3,11 @@
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import (
     accuracy_score,
-    average_precision_score,
     classification_report,
     confusion_matrix,
     f1_score,
@@ -30,9 +30,14 @@ from src.features import (
     SELECTED_LEXICAL_FEATURES,
     select_lexical_features,
 )
+from src.utils import (
+    adjust_positive_rate,
+    compute_pr_auc,
+)
 
 TEST_SIZE = 0.2
 RANDOM_STATE = 42
+REALISTIC_POSITIVE_RATES = (0.10, 0.05, 0.01)
 
 def build_gb_model() -> GradientBoostingClassifier:
     """
@@ -45,6 +50,72 @@ def build_gb_model() -> GradientBoostingClassifier:
         max_depth=5,
         random_state=RANDOM_STATE,
     )
+
+def evaluate_predictions(
+    y_true: np.ndarray | pd.Series,
+    y_pred: np.ndarray | pd.Series,
+    y_prob: np.ndarray | pd.Series,
+) -> dict:
+    """Compute core classification metrics using custom compute_pr_auc."""
+    return {
+        "Accuracy": accuracy_score(y_true, y_pred),
+        "Precision": precision_score(y_true, y_pred, pos_label=1, zero_division=0),
+        "Recall": recall_score(y_true, y_pred, pos_label=1, zero_division=0),
+        "F1-score": f1_score(y_true, y_pred, pos_label=1, zero_division=0),
+        "PR-AUC": compute_pr_auc(y_true, y_prob, pos_label=1),
+    }
+
+def evaluate_realistic_positive_rates(
+    split_name: str,
+    y_test: pd.Series,
+    y_pred: np.ndarray,
+    y_prob: np.ndarray,
+    target_rates: tuple[float, ...] = REALISTIC_POSITIVE_RATES,
+) -> pd.DataFrame:
+    """
+    Evaluate model metrics when lowering the test positive rate to realistic prevalence
+    levels (e.g., 10%, 5%, 1%) while keeping 100% of positive phishing samples intact.
+    """
+    eval_df = pd.DataFrame({
+        "label": y_test.to_numpy(),
+        "y_pred": y_pred,
+        "y_prob": y_prob,
+    })
+
+    base_rate = float((eval_df["label"] == 1).mean())
+    rows = []
+
+    base_metrics = evaluate_predictions(eval_df["label"], eval_df["y_pred"], eval_df["y_prob"])
+    rows.append({
+        "Target Pos Rate": f"{base_rate:.2%} (Original)",
+        "Total Rows": len(eval_df),
+        "Pos Rows (1)": int((eval_df["label"] == 1).sum()),
+        "Neg Rows (0)": int((eval_df["label"] == 0).sum()),
+        **{k: f"{v:.4f}" for k, v in base_metrics.items()},
+    })
+
+    for rate in target_rates:
+        adj_df = adjust_positive_rate(
+            eval_df,
+            target_rate=rate,
+            label_col="label",
+            pos_label=1,
+            random_state=RANDOM_STATE,
+        )
+        adj_metrics = evaluate_predictions(adj_df["label"], adj_df["y_pred"], adj_df["y_prob"])
+        actual_rate = float((adj_df["label"] == 1).mean())
+        rows.append({
+            "Target Pos Rate": f"{actual_rate:.2%}",
+            "Total Rows": len(adj_df),
+            "Pos Rows (1)": int((adj_df["label"] == 1).sum()),
+            "Neg Rows (0)": int((adj_df["label"] == 0).sum()),
+            **{k: f"{v:.4f}" for k, v in adj_metrics.items()},
+        })
+
+    rate_df = pd.DataFrame(rows)
+    print(f"\n--- Realistic Positive-Rate Evaluation ({split_name}) ---")
+    print(rate_df.to_string(index=False))
+    return rate_df
 
 def train_and_evaluate(
     split_name: str,
@@ -64,14 +135,11 @@ def train_and_evaluate(
     y_pred = model.predict(X_test)
     y_prob = model.predict_proba(X_test)[:, 1]
 
+    core_metrics = evaluate_predictions(y_test, y_pred, y_prob)
     metrics = {
         "Train Rows": len(X_train),
         "Test Rows": len(X_test),
-        "Accuracy": accuracy_score(y_test, y_pred),
-        "Precision": precision_score(y_test, y_pred, pos_label=1, zero_division=0),
-        "Recall": recall_score(y_test, y_pred, pos_label=1, zero_division=0),
-        "F1-score": f1_score(y_test, y_pred, pos_label=1, zero_division=0),
-        "PR-AUC": average_precision_score(y_test, y_prob),
+        **core_metrics,
     }
 
     print(f"\n================ {split_name} ================")
@@ -97,6 +165,9 @@ def train_and_evaluate(
             zero_division=0,
         )
     )
+
+    evaluate_realistic_positive_rates(split_name, y_test, y_pred, y_prob)
+
     return model, metrics
 
 def print_features_importances(model: GradientBoostingClassifier) -> None:
