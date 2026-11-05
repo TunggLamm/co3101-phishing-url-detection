@@ -1,10 +1,15 @@
 """Run both split methods on the downloaded PhiUSIIL CSV and print a summary."""
 
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-from data_split import (
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
+
+from src.data_split import (
     assert_no_etld1_overlap,
     etld1_split,
     extract_etld1,
@@ -12,7 +17,6 @@ from data_split import (
 )
 
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = (
     PROJECT_DIR
     / "data"

@@ -20,7 +20,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 INCLUDE_PSL_PRIVATE_DOMAINS = False
 
-# Use tldextract's bundled Public Suffix List snapshot to avoid an HTTP fetch during the first run. 
+# Use tldextract's bundled Public Suffix List snapshot to avoid an HTTP fetch during the first run.
 # set INCLUDE_PSL_PRIVATE_DOMAINS to include private suffixes so hosted subdomains can be separated as their own registrable-domain groups.
 _TLD_EXTRACTOR = tldextract.TLDExtract(
     suffix_list_urls=(),
@@ -59,7 +59,7 @@ def extract_etld1(url: object) -> str:
 
     hostname = hostname.rstrip(".").lower()
 
-   # IP addresses handling
+    # IP addresses handling
     try:
         ip_address = ipaddress.ip_address(hostname)
     except ValueError:
@@ -116,7 +116,7 @@ def random_split(
         )
 
     if not 0 < test_size < 1:
-            raise ValueError("test_size must be between 0 and 1 (exclusive).")
+        raise ValueError("test_size must be between 0 and 1 (exclusive).")
 
     stratify_values = df[label_col] if stratify else None
 
