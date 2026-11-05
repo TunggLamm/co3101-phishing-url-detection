@@ -1,7 +1,14 @@
 """Tests for random and eTLD+1 train/test splitting."""
 
+import sys
+from pathlib import Path
+
 import pandas as pd
 import pytest
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
 
 from src.data_split import (
     assert_no_etld1_overlap,

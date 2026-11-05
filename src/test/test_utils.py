@@ -1,10 +1,17 @@
 """Tests for PR-AUC calculation, positive-rate adjustment, and confidence intervals."""
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import pytest
 from scipy import stats
 from sklearn.metrics import average_precision_score
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_DIR) not in sys.path:
+    sys.path.insert(0, str(PROJECT_DIR))
 
 from src.utils import (
     adjust_positive_rate,
@@ -100,6 +107,26 @@ def test_adjust_positive_rate_is_reproducible_and_validates_target_rate() -> Non
 
     with pytest.raises(ValueError, match="between 0 and 1"):
         adjust_positive_rate(df, target_rate=0.0)
+
+
+def test_compute_confidence_interval_matches_scipy_student_t() -> None:
+    """Verify Student-t confidence interval on a vector with non-zero variance."""
+    values = [0.80, 0.82, 0.85, 0.81, 0.84, 0.83]
+    expected_mean = float(np.mean(values))
+    expected_sem = float(stats.sem(values, ddof=1))
+    expected_low, expected_high = stats.t.interval(
+        0.95,
+        df=len(values) - 1,
+        loc=expected_mean,
+        scale=expected_sem,
+    )
+
+    mean, ci_low, ci_high = compute_confidence_interval(values, confidence=0.95)
+
+    assert ci_low < mean < ci_high
+    assert mean == pytest.approx(expected_mean, abs=1e-12)
+    assert ci_low == pytest.approx(float(expected_low), abs=1e-12)
+    assert ci_high == pytest.approx(float(expected_high), abs=1e-12)
 
 
 def test_compute_confidence_interval_handles_zero_variance_and_invalid_inputs() -> None:
