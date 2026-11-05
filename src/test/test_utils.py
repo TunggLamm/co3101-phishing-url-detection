@@ -1,11 +1,16 @@
-"""Tests for PR-AUC calculation and positive-rate adjustment (Mandatory Tests #2 and #3)."""
+"""Tests for PR-AUC calculation, positive-rate adjustment, and confidence intervals."""
 
 import numpy as np
 import pandas as pd
 import pytest
+from scipy import stats
 from sklearn.metrics import average_precision_score
 
-from src.utils import adjust_positive_rate, compute_pr_auc
+from src.utils import (
+    adjust_positive_rate,
+    compute_confidence_interval,
+    compute_pr_auc,
+)
 
 
 def test_compute_pr_auc_matches_sklearn_on_known_vector() -> None:
@@ -95,3 +100,20 @@ def test_adjust_positive_rate_is_reproducible_and_validates_target_rate() -> Non
 
     with pytest.raises(ValueError, match="between 0 and 1"):
         adjust_positive_rate(df, target_rate=0.0)
+
+
+def test_compute_confidence_interval_handles_zero_variance_and_invalid_inputs() -> None:
+    """Verify zero-variance stability and input validation."""
+    mean, ci_low, ci_high = compute_confidence_interval([0.85, 0.85, 0.85])
+    assert mean == pytest.approx(0.85)
+    assert ci_low == pytest.approx(0.85)
+    assert ci_high == pytest.approx(0.85)
+
+    with pytest.raises(ValueError, match="At least 2 values"):
+        compute_confidence_interval([0.90])
+
+    with pytest.raises(ValueError, match="between 0 and 1"):
+        compute_confidence_interval([0.90, 0.92], confidence=1.0)
+
+    with pytest.raises(ValueError, match="NaN or infinite"):
+        compute_confidence_interval([0.90, float("nan"), 0.92])

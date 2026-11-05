@@ -3,7 +3,9 @@
 The module provides:
 - compute_pr_auc: step-wise Precision-Recall AUC (Average Precision) calculation;
 - adjust_positive_rate: lowers positive class prevalence to a target rate while
-  preserving 100% of the positive samples.
+  preserving 100% of the positive samples;
+- compute_confidence_interval: Student-t confidence interval across repeated
+  split evaluations.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from typing import Sequence
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 
 def compute_pr_auc(
@@ -159,3 +162,54 @@ def adjust_positive_rate(
 
     adjusted_df = pd.concat([pos_df, sampled_neg_df], axis=0, ignore_index=True)
     return adjusted_df
+
+
+def compute_confidence_interval(
+    values: Sequence[float] | np.ndarray | pd.Series,
+    *,
+    confidence: float = 0.95,
+) -> tuple[float, float, float]:
+    """Compute the mean and two-sided Student-t confidence interval.
+
+    Calculates:
+        mean +/- t_{alpha/2, K-1} * (s / sqrt(K))
+    where ``K`` is the number of repeated measurements (e.g., across seeds) and
+    ``s`` is the sample standard deviation with ``ddof=1``.
+
+    Args:
+        values: 1D sequence of at least 2 numeric observations.
+        confidence: Confidence level in (0, 1), default 0.95 (95% CI).
+
+    Returns:
+        A 3-tuple ``(mean, ci_lower, ci_upper)``.
+
+    Raises:
+        ValueError: If ``values`` is not 1D, has fewer than 2 elements,
+            contains NaN/infinite values, or ``confidence`` is not in (0, 1).
+    """
+    if not 0.0 < confidence < 1.0:
+        raise ValueError("confidence must be between 0 and 1 (exclusive).")
+
+    arr = np.asarray(values, dtype=float)
+    if arr.ndim != 1:
+        raise ValueError("values must be a 1D sequence.")
+    if len(arr) < 2:
+        raise ValueError(
+            "At least 2 values are required to compute a confidence interval."
+        )
+    if np.isnan(arr).any() or np.isinf(arr).any():
+        raise ValueError("values must not contain NaN or infinite values.")
+
+    mean = float(np.mean(arr))
+    sem = float(stats.sem(arr, ddof=1))
+    if sem == 0.0:
+        return mean, mean, mean
+
+    ci_low, ci_high = stats.t.interval(
+        confidence,
+        df=len(arr) - 1,
+        loc=mean,
+        scale=sem,
+    )
+
+    return mean, float(ci_low), float(ci_high)
