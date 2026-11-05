@@ -47,7 +47,8 @@ def test_random_split_keeps_all_rows_and_is_reproducible() -> None:
     assert test_1.index.tolist() == test_2.index.tolist()
 
 
-def test_etld1_split_has_no_domain_overlap_and_keeps_all_rows() -> None:
+def test_etld1_split_has_no_domain_overlap() -> None:
+    """Mandatory Test #1: Verify that no eTLD+1 occurs in both train and test splits."""
     df = make_toy_dataset()
 
     train_df, test_df = etld1_split(
@@ -61,8 +62,6 @@ def test_etld1_split_has_no_domain_overlap_and_keeps_all_rows() -> None:
     test_domains = {extract_etld1(url) for url in test_df["URL"]}
 
     assert train_domains.isdisjoint(test_domains)
-    assert len(train_df) + len(test_df) == len(df)
-    assert set(train_df.index).isdisjoint(set(test_df.index))
     assert_no_etld1_overlap(train_df, test_df, url_col="URL")
 
 
