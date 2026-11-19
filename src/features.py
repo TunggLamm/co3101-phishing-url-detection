@@ -84,6 +84,47 @@ def select_lexical_features(df: pd.DataFrame):
 
     return X, y
 
+NUMERIC_LEAKAGE_COLS = [
+    "IsHTTPS",
+    "URLSimilarityIndex",
+    "TLDLegitimateProb",
+    "URLCharProb",
+]
+RAW_STRING_COLS = ["FILENAME", "URL", "Domain", "TLD", "Title"]
+
+def extract_features_and_labels(
+    df: pd.DataFrame,
+    feature_cols: list[str],
+) -> tuple[pd.DataFrame, pd.Series]:
+    missing_cols = set(feature_cols) - set(df.columns)
+    if missing_cols:
+        raise ValueError(f"Missing required feature columns: {missing_cols}")
+    if "label" not in df.columns:
+        raise ValueError("Column 'label' not found in DataFrame.")
+    X = df[feature_cols].copy()
+    if X.isna().any().any():
+        raise ValueError("NaN values detected in the selected features.")
+    y = (df["label"] == 0).astype(int)
+    return X, y
+
+def get_ablation_feature_sets(df: pd.DataFrame) -> dict[str, list[str]]:
+    excluded = set(RAW_STRING_COLS) | {"label"}
+    full_numeric_cols = [c for c in df.columns if c not in excluded]
+    no_leakage_cols = [
+        c for c in full_numeric_cols if c not in set(NUMERIC_LEAKAGE_COLS)
+    ]
+
+    all_lexical_cols = SELECTED_LEXICAL_FEATURES + REDUNDANT_LEXICAL_COLS
+
+    core_lexical_cols = list(SELECTED_LEXICAL_FEATURES)
+
+    return {
+        "1. Full Numeric (50 cols)": full_numeric_cols,
+        "2. No Label Leakage (46 cols)": no_leakage_cols,
+        "3. All Lexical / No HTML (18 cols)": all_lexical_cols,
+        "4. Core Lexical (10 cols)": core_lexical_cols,
+    }
+
 def main():
     if not DATA_PATH.is_file():
         raise FileNotFoundError(f"Dataset not found at: {DATA_PATH}")
