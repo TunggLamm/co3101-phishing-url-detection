@@ -79,18 +79,20 @@ def format_metric(
     values: Sequence[float] | np.ndarray | pd.Series,
     *,
     confidence: float = DEFAULT_CONFIDENCE,
+    signed: bool = False,
 ) -> str:
     """Format a single value as ``0.xxxx`` or >= 2 values as ``Mean ± CI``."""
     arr = np.asarray(values, dtype=float)
+    fmt = "+.4f" if signed else ".4f"
     if len(arr) == 1:
-        return f"{float(arr[0]):.4f}"
+        return f"{float(arr[0]):{fmt}}"
 
     mean, ci_low, ci_high = compute_confidence_interval(
         arr,
         confidence=confidence,
     )
     half_width = 0.5 * (ci_high - ci_low)
-    return f"{mean:.4f} ± {half_width:.4f}"
+    return f"{mean:{fmt}} ± {half_width:.4f}"
 
 
 def evaluate_model(
@@ -99,6 +101,9 @@ def evaluate_model(
     split_name: str,
     split_fn: Callable[[pd.DataFrame, int], tuple[pd.DataFrame, pd.DataFrame]],
     model_builder: Callable[[int], Any],
+    feature_extractor: Callable[
+        [pd.DataFrame], tuple[Any, pd.Series]
+    ] = select_lexical_features,
     seeds: int | Sequence[int] = DEFAULT_SEEDS,
     confidence: float = DEFAULT_CONFIDENCE,
     target_rates: Sequence[float] = REALISTIC_POSITIVE_RATES,
@@ -120,8 +125,8 @@ def evaluate_model(
         if assert_etld1_disjoint:
             assert_no_etld1_overlap(train_df, test_df, url_col="URL")
 
-        X_train, y_train = select_lexical_features(train_df)
-        X_test, y_test = select_lexical_features(test_df)
+        X_train, y_train = feature_extractor(train_df)
+        X_test, y_test = feature_extractor(test_df)
 
         model = model_builder(seed)
         model.fit(X_train, y_train)

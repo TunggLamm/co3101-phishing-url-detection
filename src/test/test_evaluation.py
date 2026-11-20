@@ -18,12 +18,15 @@ from src.evaluation import (
     evaluate_model,
     normalize_seeds,
 )
+from src.features import NUMERIC_LEAKAGE_COLS, REDUNDANT_LEXICAL_COLS
+from src.one_line_rule import build_one_line_rule_model, extract_url_and_labels
+from src.run_ablation import run_feature_ablation, run_single_leakage_audit
 from src.train_gb import build_gb_model, print_feature_importances
 from src.train_lr import build_logistic_regression_pipeline, print_feature_weights
 from src.utils import compute_confidence_interval
 
 
-def make_synthetic_dataset(seed: int = 123) -> pd.DataFrame:
+def make_synthetic_dataset(seed: int = 123, include_ablation_cols: bool = False) -> pd.DataFrame:
     """Build a small multi-domain dataset with the 10 lexical features."""
     rng = np.random.default_rng(seed)
     suffixes = ("com", "net", "org", "co.uk")
@@ -31,25 +34,39 @@ def make_synthetic_dataset(seed: int = 123) -> pd.DataFrame:
 
     for d_idx in range(30):
         domain_is_phish = d_idx % 2 == 0
-        domain = f"site-{d_idx}.{suffixes[d_idx % len(suffixes)]}"
+        tld = suffixes[d_idx % len(suffixes)]
+        domain = f"site-{d_idx}.{tld}"
         for u_idx in range(8):
             is_phish = domain_is_phish if rng.random() > 0.20 else (not domain_is_phish)
-            rows.append(
-                {
-                    "URL": f"https://sub{u_idx}.{domain}/path/{u_idx}",
-                    "label": 0 if is_phish else 1,  # UCI raw convention
-                    "URLLength": max(10.0, float(rng.normal(52 if is_phish else 36, 18))),
-                    "DomainLength": max(5.0, float(rng.normal(20 if is_phish else 15, 7))),
-                    "IsDomainIP": int(is_phish and rng.random() < 0.25),
-                    "NoOfSubDomain": int(rng.integers(1, 4) if is_phish else rng.integers(0, 3)),
-                    "HasObfuscation": int(is_phish and rng.random() < 0.30),
-                    "LetterRatioInURL": float(np.clip(rng.normal(0.60 if is_phish else 0.68, 0.12), 0.1, 0.95)),
-                    "DegitRatioInURL": float(np.clip(rng.normal(0.14 if is_phish else 0.08, 0.08), 0.0, 0.6)),
-                    "NoOfEqualsInURL": int(rng.integers(0, 4) if is_phish else rng.integers(0, 2)),
-                    "NoOfQMarkInURL": int(rng.integers(0, 3) if is_phish else rng.integers(0, 2)),
-                    "SpacialCharRatioInURL": float(np.clip(rng.normal(0.19 if is_phish else 0.14, 0.08), 0.01, 0.5)),
-                }
-            )
+            row: dict[str, object] = {
+                "URL": f"https://sub{u_idx}.{domain}/path/{u_idx}",
+                "label": 0 if is_phish else 1,  # UCI raw convention
+                "URLLength": max(10.0, float(rng.normal(52 if is_phish else 36, 18))),
+                "DomainLength": max(5.0, float(rng.normal(20 if is_phish else 15, 7))),
+                "IsDomainIP": int(is_phish and rng.random() < 0.25),
+                "NoOfSubDomain": int(rng.integers(1, 4) if is_phish else rng.integers(0, 3)),
+                "HasObfuscation": int(is_phish and rng.random() < 0.30),
+                "LetterRatioInURL": float(np.clip(rng.normal(0.60 if is_phish else 0.68, 0.12), 0.1, 0.95)),
+                "DegitRatioInURL": float(np.clip(rng.normal(0.14 if is_phish else 0.08, 0.08), 0.0, 0.6)),
+                "NoOfEqualsInURL": int(rng.integers(0, 4) if is_phish else rng.integers(0, 2)),
+                "NoOfQMarkInURL": int(rng.integers(0, 3) if is_phish else rng.integers(0, 2)),
+                "SpacialCharRatioInURL": float(np.clip(rng.normal(0.19 if is_phish else 0.14, 0.08), 0.01, 0.5)),
+            }
+            if include_ablation_cols:
+                row.update({
+                    "FILENAME": f"doc_{d_idx}_{u_idx}.txt",
+                    "Domain": domain,
+                    "TLD": tld,
+                    "Title": "Example",
+                    "IsHTTPS": int(not is_phish),
+                    "URLSimilarityIndex": float(rng.normal(25 if is_phish else 95, 10)),
+                    "TLDLegitimateProb": float(np.clip(rng.normal(0.2 if is_phish else 0.8, 0.1), 0.0, 1.0)),
+                    "URLCharProb": float(np.clip(rng.normal(0.03 if is_phish else 0.06, 0.01), 0.0, 1.0)),
+                    "LineOfCode": float(max(0.0, rng.normal(60 if is_phish else 400, 50))),
+                })
+                for col in REDUNDANT_LEXICAL_COLS:
+                    row[col] = float(rng.normal(1.0 if is_phish else 0.5, 0.3))
+            rows.append(row)
 
     return pd.DataFrame(rows)
 
@@ -170,3 +187,41 @@ def test_evaluate_model_gb_single_and_multi_seed_and_overlap_check() -> None:
             target_rates=(0.10,),
             assert_etld1_disjoint=True,
         )
+
+
+def test_ablation_and_leakage_audit_single_and_multi_seed() -> None:
+    df = make_synthetic_dataset(include_ablation_cols=True)
+    splits = [
+        (s, *etld1_split(df, test_size=0.25, random_state=s, n_candidates=10))
+        for s in (42, 43, 44)
+    ]
+
+    abl_multi = run_feature_ablation(
+        "LR", build_logistic_regression_pipeline, splits
+    )
+    assert len(abl_multi) == 4
+    assert all("±" in v for v in abl_multi["F1 (Orig 42.8%)"])
+    assert all("±" in v for v in abl_multi["ΔF1 (Orig)"])
+
+    abl_single = run_feature_ablation(
+        "LR", build_logistic_regression_pipeline, splits[:1]
+    )
+    assert all("±" not in v for v in abl_single["F1 (Orig 42.8%)"])
+
+    audit_multi = run_single_leakage_audit(splits)
+    assert audit_multi["Single Leaked Feature"].tolist() == NUMERIC_LEAKAGE_COLS
+    assert all("±" in v for v in audit_multi["PR-AUC"])
+
+    rule_res = evaluate_model(
+        df,
+        split_name="ONE-LINE RULE",
+        split_fn=lambda d, s: random_split(d, test_size=0.25, random_state=s),
+        model_builder=build_one_line_rule_model,
+        feature_extractor=extract_url_and_labels,
+        seeds=(42, 43),
+        target_rates=(0.10,),
+    )
+    assert len(rule_res["models"]) == 2
+    assert "±" in rule_res["summary"]["F1-score"]["formatted"]
+
+
