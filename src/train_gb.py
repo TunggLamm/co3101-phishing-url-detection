@@ -117,6 +117,22 @@ def main() -> None:
     print(comparison_df.to_string())
     print("================================================================================")
 
+    rand_1pct = res_random["rate_summary_df"].loc[
+        res_random["rate_summary_df"]["Target Pos Rate"] == "1.00%",
+        list(CORE_METRICS),
+    ].iloc[0]
+    etld1_1pct = res_etld1["rate_summary_df"].loc[
+        res_etld1["rate_summary_df"]["Target Pos Rate"] == "1.00%",
+        list(CORE_METRICS),
+    ].iloc[0]
+    comparison_1pct_df = pd.DataFrame(
+        [rand_1pct.to_dict(), etld1_1pct.to_dict()],
+        index=["GB - Random Split (1% Pos)", "GB - eTLD+1 Split (1% Pos)"],
+    )
+    print(f"\n================ GB 1% POSITIVE-RATE COMPARISON SUMMARY ({suffix}) ================")
+    print(comparison_1pct_df.to_string())
+    print("===================================================================================")
+
     print_feature_importances(res_etld1["models"])
 
 
