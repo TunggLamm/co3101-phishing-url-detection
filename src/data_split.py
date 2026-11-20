@@ -11,6 +11,7 @@ The original dataset labels are not changed by these functions.
 from __future__ import annotations
 
 import ipaddress
+from functools import lru_cache
 from urllib.parse import urlsplit
 
 import pandas as pd
@@ -28,6 +29,7 @@ _TLD_EXTRACTOR = tldextract.TLDExtract(
 )
 
 
+@lru_cache(maxsize=None)
 def extract_etld1(url: object) -> str:
     """Return a stable grouping key for a URL's eTLD+1.
 

@@ -86,3 +86,15 @@ def test_etld1_split_rejects_missing_url() -> None:
 
     with pytest.raises(ValueError, match="missing URL"):
         etld1_split(df, test_size=0.4, random_state=42)
+
+
+def test_extract_etld1_caches_repeated_urls() -> None:
+    extract_etld1.cache_clear()
+    url = "https://login.example.com/path"
+
+    assert extract_etld1(url) == "example.com"
+    assert extract_etld1(url) == "example.com"
+
+    info = extract_etld1.cache_info()
+    assert info.misses == 1
+    assert info.hits == 1
