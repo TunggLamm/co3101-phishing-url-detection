@@ -73,13 +73,13 @@ def build_error_frame(
     )
     return analysis_df
 
-def print_error_counts_and_overlap(df: pd.DataFrame) -> None:
+def print_error_counts_and_overlap(df: pd.DataFrame) -> dict:
     models = [
         ("One-Line Rule", "rule_pred"),
         ("Logistic Regression (10 feats)", "lr_pred"),
         ("Gradient Boosting (10 feats)", "gb_pred"),
     ]
-    rows = []
+    rows, counts_data = [], []
     for name, col in models:
         tn = int(((df["y_true"] == 0) & (df[col] == 0)).sum())
         fp = int(((df["y_true"] == 0) & (df[col] == 1)).sum())
@@ -96,6 +96,13 @@ def print_error_counts_and_overlap(df: pd.DataFrame) -> None:
             "FPR (%)": f"{fpr * 100:.2f}%",
             "FNR (%)": f"{fnr * 100:.2f}%",
         })
+        counts_data.append({
+            "model": name.split(" (")[0],
+            "fp": fp,
+            "fn": fn,
+            "fpr_pct": round(fpr * 100, 2),
+            "fnr_pct": round(fnr * 100, 2),
+        })
     
     print("\n================ 1. ERROR COUNTS SUMMARY (eTLD+1 TEST SET) ================")
     print(pd.DataFrame(rows).to_string(index=False))
@@ -108,41 +115,61 @@ def print_error_counts_and_overlap(df: pd.DataFrame) -> None:
 
     gb_fn_total = int(gb_fn.sum())
     gb_fp_total = int(gb_fp.sum())
+    ov_gb_rule = 100 * (gb_fn & rule_fn).sum() / gb_fn_total if gb_fn_total else 0.0
+    ov_gb_lr = 100 * (gb_fn & lr_fn).sum() / gb_fn_total if gb_fn_total else 0.0
+    ov_all3 = 100 * (gb_fn & lr_fn & rule_fn).sum() / gb_fn_total if gb_fn_total else 0.0
+    ov_fp = 100 * (gb_fp & lr_fp).sum() / gb_fp_total if gb_fp_total else 0.0
 
     print("\n--- Cross-Model Error Overlap ---")
     print(
         f"FN overlap (GB ∩ One-Line Rule) : {int((gb_fn & rule_fn).sum()):,} / {gb_fn_total:,} "
-        f"({100 * (gb_fn & rule_fn).sum() / gb_fn_total:.2f}% of GB FN)"
+        f"({ov_gb_rule:.2f}% of GB FN)"
     )
     print(
         f"FN overlap (GB ∩ LR)            : {int((gb_fn & lr_fn).sum()):,} / {gb_fn_total:,} "
-        f"({100 * (gb_fn & lr_fn).sum() / gb_fn_total:.2f}% of GB FN)"
+        f"({ov_gb_lr:.2f}% of GB FN)"
     )
     print(
         f"FN overlap (All 3 Models)       : {int((gb_fn & lr_fn & rule_fn).sum()):,} / {gb_fn_total:,} "
-        f"({100 * (gb_fn & lr_fn & rule_fn).sum() / gb_fn_total:.2f}% of GB FN)"
+        f"({ov_all3:.2f}% of GB FN)"
     )
     print(
         f"FP overlap (GB ∩ LR)            : {int((gb_fp & lr_fp).sum()):,} / {gb_fp_total:,} "
-        f"({100 * (gb_fp & lr_fp).sum() / gb_fp_total:.2f}% of GB FP)"
+        f"({ov_fp:.2f}% of GB FP)"
     )
+    return {
+        "counts": counts_data,
+        "overlap_pct": {
+            "gb_rule_fn": round(float(ov_gb_rule), 2),
+            "gb_lr_fn": round(float(ov_gb_lr), 2),
+            "all3_fn": round(float(ov_all3), 2),
+            "gb_lr_fp": round(float(ov_fp), 2),
+        },
+    }
 
-def print_template_breakdown(df: pd.DataFrame) -> None:
+def print_template_breakdown(df: pd.DataFrame) -> dict:
     models = [
         ("One-Line Rule", "rule_pred"),
         ("Logistic Regression", "lr_pred"),
         ("Gradient Boosting", "gb_pred"),
     ]
-    fn_rows = []
+    fn_rows, fn_stats = [], {}
     for name, col in models: 
         sub = df[(df["y_true"] == 1) & (df[col] == 0)]
+        stats = {
+            "https_www": round(float(sub["starts_https_www"].mean()) * 100, 2) if len(sub) else 0.0,
+            "len_diff_7": round(float(sub["is_root_len_diff_7"].mean()) * 100, 2) if len(sub) else 0.0,
+            "zero_digits": round(float((~sub["has_digits"]).mean()) * 100, 2) if len(sub) else 0.0,
+            "no_query": round(float((~sub["has_query"]).mean()) * 100, 2) if len(sub) else 0.0,
+        }
+        fn_stats[name] = stats
         fn_rows.append({
             "Model (FN Group)": name,
             "FN Count": len(sub),
-            "% https://www.": f"{sub['starts_https_www'].mean() * 100:.2f}%",
-            "% LenDiff == 7": f"{sub['is_root_len_diff_7'].mean() * 100:.2f}%",
-            "% Zero Digits": f"{(~sub['has_digits']).mean() * 100:.2f}%",
-            "% No Query (?/=)": f"{(~sub['has_query']).mean() * 100:.2f}%",
+            "% https://www.": f"{stats['https_www']:.2f}%",
+            "% LenDiff == 7": f"{stats['len_diff_7']:.2f}%",
+            "% Zero Digits": f"{stats['zero_digits']:.2f}%",
+            "% No Query (?/=)": f"{stats['no_query']:.2f}%",
         })
     print("\n================ 2A. FN STRUCTURAL BREAKDOWN (MISSED PHISHING) ================")
     print(pd.DataFrame(fn_rows).to_string(index=False))
@@ -170,6 +197,12 @@ def print_template_breakdown(df: pd.DataFrame) -> None:
     
     print("\n================ 2B. FP STRUCTURAL BREAKDOWN (FALSE ALARMS) ================")
     print(pd.DataFrame(fp_rows).to_string(index=False))
+    return {
+        "gb_https_www": fn_stats["Gradient Boosting"]["https_www"],
+        "gb_len_diff_7": fn_stats["Gradient Boosting"]["len_diff_7"],
+        "gb_zero_digits": fn_stats["Gradient Boosting"]["zero_digits"],
+        "lr_zero_digits": fn_stats["Logistic Regression"]["zero_digits"],
+    }
 
 def print_feature_profile(
     df: pd.DataFrame,
