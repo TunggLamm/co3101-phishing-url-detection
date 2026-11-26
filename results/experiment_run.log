@@ -1,0 +1,246 @@
+=== CO3101-C1 LOCKED EXPERIMENT RUN (2026-11-26 22:42:31) ===
+Loaded 235,795 rows x 56 columns.
+Columns (verified no timestamp): ['FILENAME', 'URL', 'URLLength', 'Domain', 'DomainLength', 'IsDomainIP', 'TLD', 'URLSimilarityIndex', 'CharContinuationRate', 'TLDLegitimateProb', 'URLCharProb', 'TLDLength', 'NoOfSubDomain', 'HasObfuscation', 'NoOfObfuscatedChar', 'ObfuscationRatio', 'NoOfLettersInURL', 'LetterRatioInURL', 'NoOfDegitsInURL', 'DegitRatioInURL', 'NoOfEqualsInURL', 'NoOfQMarkInURL', 'NoOfAmpersandInURL', 'NoOfOtherSpecialCharsInURL', 'SpacialCharRatioInURL', 'IsHTTPS', 'LineOfCode', 'LargestLineLength', 'HasTitle', 'Title', 'DomainTitleMatchScore', 'URLTitleMatchScore', 'HasFavicon', 'Robots', 'IsResponsive', 'NoOfURLRedirect', 'NoOfSelfRedirect', 'HasDescription', 'NoOfPopup', 'NoOfiFrame', 'HasExternalFormSubmit', 'HasSocialNet', 'HasSubmitButton', 'HasHiddenFields', 'HasPasswordField', 'Bank', 'Pay', 'Crypto', 'HasCopyrightInfo', 'NoOfImage', 'NoOfCSS', 'NoOfJS', 'NoOfSelfRef', 'NoOfEmptyRef', 'NoOfExternalRef', 'label']
+
+================ ONE-LINE RULE - RANDOM SPLIT ================
+Seeds (K=5): [42, 43, 44, 45, 46] | Avg Train: 188,636 | Avg Test: 47,159
+  + Accuracy  : 0.9895 ± 0.0005  [0.9890, 0.9901]
+  + Precision : 1.0000 ± 0.0000  [1.0000, 1.0000]
+  + Recall    : 0.9756 ± 0.0013  [0.9743, 0.9768]
+  + F1-score  : 0.9876 ± 0.0006  [0.9870, 0.9883]
+  + PR-AUC    : 0.9860 ± 0.0007  [0.9853, 0.9867]
+
+--- Realistic Positive-Rate Evaluation (ONE-LINE RULE - RANDOM SPLIT, Mean ± 95% CI) ---
+  Target Pos Rate  Avg Total  Avg Pos (1)  Avg Neg (0)        Accuracy       Precision          Recall        F1-score          PR-AUC
+42.81% (Original)      47159        20189        26970 0.9895 ± 0.0005 1.0000 ± 0.0000 0.9756 ± 0.0013 0.9876 ± 0.0006 0.9860 ± 0.0007
+           10.00%     201890        20189       181701 0.9976 ± 0.0001 1.0000 ± 0.0000 0.9756 ± 0.0013 0.9876 ± 0.0006 0.9780 ± 0.0011
+            5.00%     403780        20189       383591 0.9988 ± 0.0001 1.0000 ± 0.0000 0.9756 ± 0.0013 0.9876 ± 0.0006 0.9768 ± 0.0012
+            1.00%    2018900        20189      1998711 0.9998 ± 0.0000 1.0000 ± 0.0000 0.9756 ± 0.0013 0.9876 ± 0.0006 0.9758 ± 0.0012
+
+================ ONE-LINE RULE - ETLD+1 SPLIT ================
+Seeds (K=5): [42, 43, 44, 45, 46] | Avg Train: 188,658 | Avg Test: 47,137
+  + Accuracy  : 0.9895 ± 0.0023  [0.9872, 0.9919]
+  + Precision : 1.0000 ± 0.0000  [1.0000, 1.0000]
+  + Recall    : 0.9756 ± 0.0055  [0.9700, 0.9811]
+  + F1-score  : 0.9876 ± 0.0028  [0.9848, 0.9905]
+  + PR-AUC    : 0.9860 ± 0.0032  [0.9828, 0.9892]
+
+--- Realistic Positive-Rate Evaluation (ONE-LINE RULE - ETLD+1 SPLIT, Mean ± 95% CI) ---
+  Target Pos Rate  Avg Total  Avg Pos (1)  Avg Neg (0)        Accuracy       Precision          Recall        F1-score          PR-AUC
+42.81% (Original)      47137        20180        26958 0.9895 ± 0.0023 1.0000 ± 0.0000 0.9756 ± 0.0055 0.9876 ± 0.0028 0.9860 ± 0.0032
+           10.00%     201798        20180       181618 0.9976 ± 0.0006 1.0000 ± 0.0000 0.9756 ± 0.0055 0.9876 ± 0.0028 0.9780 ± 0.0050
+            5.00%     403596        20180       383416 0.9988 ± 0.0003 1.0000 ± 0.0000 0.9756 ± 0.0055 0.9876 ± 0.0028 0.9768 ± 0.0053
+            1.00%    2017980        20180      1997800 0.9998 ± 0.0001 1.0000 ± 0.0000 0.9756 ± 0.0055 0.9876 ± 0.0028 0.9758 ± 0.0055
+
+================ LOGISTIC REGRESSION - RANDOM SPLIT ================
+Seeds (K=5): [42, 43, 44, 45, 46] | Avg Train: 188,636 | Avg Test: 47,159
+  + Accuracy  : 0.8642 ± 0.0020  [0.8622, 0.8662]
+  + Precision : 0.9471 ± 0.0015  [0.9456, 0.9487]
+  + Recall    : 0.7232 ± 0.0053  [0.7179, 0.7285]
+  + F1-score  : 0.8202 ± 0.0033  [0.8169, 0.8234]
+  + PR-AUC    : 0.9153 ± 0.0011  [0.9142, 0.9163]
+
+--- Realistic Positive-Rate Evaluation (LOGISTIC REGRESSION - RANDOM SPLIT, Mean ± 95% CI) ---
+  Target Pos Rate  Avg Total  Avg Pos (1)  Avg Neg (0)        Accuracy       Precision          Recall        F1-score          PR-AUC
+42.81% (Original)      47159        20189        26970 0.8642 ± 0.0020 0.9471 ± 0.0015 0.7232 ± 0.0053 0.8202 ± 0.0033 0.9153 ± 0.0011
+           10.00%     201890        20189       181701 0.9453 ± 0.0006 0.7278 ± 0.0049 0.7232 ± 0.0053 0.7255 ± 0.0025 0.7932 ± 0.0022
+            5.00%     403780        20189       383591 0.9576 ± 0.0008 0.5587 ± 0.0072 0.7232 ± 0.0053 0.6304 ± 0.0041 0.7449 ± 0.0030
+            1.00%    2018900        20189      1998711 0.9673 ± 0.0010 0.1949 ± 0.0049 0.7232 ± 0.0053 0.3070 ± 0.0059 0.6543 ± 0.0068
+
+================ LOGISTIC REGRESSION - ETLD+1 SPLIT ================
+Seeds (K=5): [42, 43, 44, 45, 46] | Avg Train: 188,658 | Avg Test: 47,137
+  + Accuracy  : 0.8592 ± 0.0085  [0.8507, 0.8677]
+  + Precision : 0.9475 ± 0.0055  [0.9420, 0.9530]
+  + Recall    : 0.7105 ± 0.0262  [0.6843, 0.7368]
+  + F1-score  : 0.8119 ± 0.0159  [0.7960, 0.8278]
+  + PR-AUC    : 0.9116 ± 0.0068  [0.9048, 0.9183]
+
+--- Realistic Positive-Rate Evaluation (LOGISTIC REGRESSION - ETLD+1 SPLIT, Mean ± 95% CI) ---
+  Target Pos Rate  Avg Total  Avg Pos (1)  Avg Neg (0)        Accuracy       Precision          Recall        F1-score          PR-AUC
+42.81% (Original)      47137        20180        26958 0.8592 ± 0.0085 0.9475 ± 0.0055 0.7105 ± 0.0262 0.8119 ± 0.0159 0.9116 ± 0.0068
+           10.00%     201798        20180       181618 0.9445 ± 0.0023 0.7287 ± 0.0228 0.7105 ± 0.0262 0.7191 ± 0.0095 0.7857 ± 0.0154
+            5.00%     403596        20180       383416 0.9574 ± 0.0031 0.5592 ± 0.0279 0.7105 ± 0.0262 0.6253 ± 0.0126 0.7367 ± 0.0187
+            1.00%    2017980        20180      1997800 0.9679 ± 0.0042 0.1971 ± 0.0185 0.7105 ± 0.0262 0.3082 ± 0.0212 0.6492 ± 0.0224
+
+================ GRADIENT BOOSTING - RANDOM SPLIT ================
+Seeds (K=5): [42, 43, 44, 45, 46] | Avg Train: 188,636 | Avg Test: 47,159
+  + Accuracy  : 0.9928 ± 0.0005  [0.9923, 0.9934]
+  + Precision : 0.9929 ± 0.0007  [0.9923, 0.9936]
+  + Recall    : 0.9903 ± 0.0011  [0.9892, 0.9915]
+  + F1-score  : 0.9916 ± 0.0006  [0.9910, 0.9923]
+  + PR-AUC    : 0.9982 ± 0.0003  [0.9979, 0.9984]
+
+--- Realistic Positive-Rate Evaluation (GRADIENT BOOSTING - RANDOM SPLIT, Mean ± 95% CI) ---
+  Target Pos Rate  Avg Total  Avg Pos (1)  Avg Neg (0)        Accuracy       Precision          Recall        F1-score          PR-AUC
+42.81% (Original)      47159        20189        26970 0.9928 ± 0.0005 0.9929 ± 0.0007 0.9903 ± 0.0011 0.9916 ± 0.0006 0.9982 ± 0.0003
+           10.00%     201890        20189       181701 0.9942 ± 0.0006 0.9536 ± 0.0050 0.9903 ± 0.0011 0.9716 ± 0.0027 0.9937 ± 0.0009
+            5.00%     403780        20189       383591 0.9945 ± 0.0006 0.9074 ± 0.0093 0.9903 ± 0.0011 0.9470 ± 0.0050 0.9898 ± 0.0015
+            1.00%    2018900        20189      1998711 0.9947 ± 0.0005 0.6544 ± 0.0235 0.9903 ± 0.0011 0.7880 ± 0.0168 0.9660 ± 0.0051
+
+================ GRADIENT BOOSTING - ETLD+1 SPLIT ================
+Seeds (K=5): [42, 43, 44, 45, 46] | Avg Train: 188,658 | Avg Test: 47,137
+  + Accuracy  : 0.9930 ± 0.0008  [0.9922, 0.9937]
+  + Precision : 0.9932 ± 0.0010  [0.9922, 0.9942]
+  + Recall    : 0.9904 ± 0.0014  [0.9890, 0.9918]
+  + F1-score  : 0.9918 ± 0.0009  [0.9908, 0.9927]
+  + PR-AUC    : 0.9981 ± 0.0002  [0.9979, 0.9983]
+
+--- Realistic Positive-Rate Evaluation (GRADIENT BOOSTING - ETLD+1 SPLIT, Mean ± 95% CI) ---
+  Target Pos Rate  Avg Total  Avg Pos (1)  Avg Neg (0)        Accuracy       Precision          Recall        F1-score          PR-AUC
+42.81% (Original)      47137        20180        26958 0.9930 ± 0.0008 0.9932 ± 0.0010 0.9904 ± 0.0014 0.9918 ± 0.0009 0.9981 ± 0.0002
+           10.00%     201798        20180       181618 0.9945 ± 0.0009 0.9562 ± 0.0078 0.9904 ± 0.0014 0.9730 ± 0.0042 0.9935 ± 0.0008
+            5.00%     403596        20180       383416 0.9947 ± 0.0009 0.9115 ± 0.0144 0.9904 ± 0.0014 0.9493 ± 0.0079 0.9893 ± 0.0015
+            1.00%    2017980        20180      1997800 0.9949 ± 0.0007 0.6632 ± 0.0326 0.9904 ± 0.0014 0.7942 ± 0.0232 0.9637 ± 0.0059
+
+--- One-Line Rule Assumption Check (Full Dataset) ---
+Legitimate URLs (0): 134,850 / 134,850 (100.00%) start with 'https://www.'
+Phishing URLs   (1): 2,449 / 100,945 (2.43%) start with 'https://www.'
+
+--- Standardized Feature Weights (eTLD+1 Split, K=5 seed(s)) ---
+                                          Description Weight (Mean ± 95% CI)  |Weight|       Direction
+DegitRatioInURL                    Digit ratio in URL        3.3789 ± 0.1551    3.3789    Phishing (+)
+LetterRatioInURL                  Letter ratio in URL        2.5047 ± 0.1400    2.5047    Phishing (+)
+SpacialCharRatioInURL  Special character ratio in URL        1.9181 ± 0.0704    1.9181    Phishing (+)
+DomainLength                       Domain name length       -1.3796 ± 0.1634    1.3796  Legitimate (-)
+NoOfQMarkInURL               Number of '?' characters        1.2814 ± 0.2973    1.2814    Phishing (+)
+NoOfSubDomain                    Number of subdomains       -0.4685 ± 0.0174    0.4685  Legitimate (-)
+HasObfuscation             Contains obfuscation (0/1)        0.3391 ± 0.0782    0.3391    Phishing (+)
+NoOfEqualsInURL              Number of '=' characters        0.2869 ± 0.0439    0.2869    Phishing (+)
+URLLength                            Total URL length       -0.0857 ± 0.0128    0.0857  Legitimate (-)
+IsDomainIP              Domain is an IP address (0/1)        0.0295 ± 0.0169    0.0295    Phishing (+)
+
+--- Gradient Boosting Feature Importances (eTLD+1 Split, K=5 seed(s)) ---
+                                          Description Importance (Mean ± 95% CI) Share (%)
+DegitRatioInURL                    Digit ratio in URL            0.3059 ± 0.0078    30.59%
+LetterRatioInURL                  Letter ratio in URL            0.2989 ± 0.0106    29.89%
+URLLength                            Total URL length            0.1752 ± 0.0136    17.52%
+SpacialCharRatioInURL  Special character ratio in URL            0.1645 ± 0.0201    16.45%
+NoOfSubDomain                    Number of subdomains            0.0364 ± 0.0036     3.64%
+DomainLength                       Domain name length            0.0190 ± 0.0047     1.90%
+NoOfQMarkInURL               Number of '?' characters            0.0000 ± 0.0000     0.00%
+IsDomainIP              Domain is an IP address (0/1)            0.0000 ± 0.0000     0.00%
+HasObfuscation             Contains obfuscation (0/1)            0.0000 ± 0.0000     0.00%
+NoOfEqualsInURL              Number of '=' characters            0.0000 ± 0.0000     0.00%
+
+================ FEATURE ABLATION: LOGISTIC REGRESSION (eTLD+1 SPLIT, seed=42) ================
+                             Stage  Cols Acc (Orig) F1 (Orig 42.8%) ΔF1 (Orig) PR-AUC (Orig) Prec (1% Pos) F1 (1% Pos) ΔF1 (1% Pos) PR-AUC (1% Pos)
+         1. Full Numeric (50 cols)    50     0.9999          0.9999    +0.0000        1.0000        1.0000      0.9999      +0.0000          1.0000
+     2. No Label Leakage (46 cols)    46     0.9969          0.9964    -0.0035        0.9999        0.8076      0.8919      -0.1079          0.9974
+3. All Lexical / No HTML (18 cols)    18     0.9786          0.9745    -0.0254        0.9957        0.7537      0.8422      -0.1577          0.9610
+         4. Core Lexical (10 cols)    10     0.8593          0.8115    -0.1884        0.9103        0.2059      0.3191      -0.6808          0.6403
+
+================ FEATURE ABLATION: GRADIENT BOOSTING (eTLD+1 SPLIT, seed=42) ================
+                             Stage  Cols Acc (Orig) F1 (Orig 42.8%) ΔF1 (Orig) PR-AUC (Orig) Prec (1% Pos) F1 (1% Pos) ΔF1 (1% Pos) PR-AUC (1% Pos)
+         1. Full Numeric (50 cols)    50     1.0000          1.0000    +0.0000        0.9999        1.0000      1.0000      +0.0000          0.9999
+     2. No Label Leakage (46 cols)    46     0.9991          0.9990    -0.0010        1.0000        0.9553      0.9764      -0.0235          0.9996
+3. All Lexical / No HTML (18 cols)    18     0.9921          0.9907    -0.0092        0.9981        0.6210      0.7631      -0.2368          0.9660
+         4. Core Lexical (10 cols)    10     0.9930          0.9918    -0.0082        0.9980        0.6527      0.7869      -0.2130          0.9645
+
+================ SINGLE-FEATURE LEAKAGE AUDIT (1 COLUMN ONLY, seed=42) ================
+Single Leaked Feature Accuracy Precision Recall F1-score PR-AUC
+              IsHTTPS   0.7624    1.0000 0.4445   0.6154 0.6821
+   URLSimilarityIndex   0.9964    1.0000 0.9915   0.9957 0.9955
+    TLDLegitimateProb   0.5723    0.0000 0.0000   0.0000 0.5322
+          URLCharProb   0.7095    0.7286 0.5113   0.6009 0.7153
+
+================ 1. ERROR COUNTS SUMMARY (eTLD+1 TEST SET) ================
+                         Model    TN  FP   FN    TP FPR (%) FNR (%)
+                 One-Line Rule 26970   0  391 19768   0.00%   1.94%
+Logistic Regression (10 feats) 26223 747 5884 14275   2.77%  29.19%
+  Gradient Boosting (10 feats) 26827 143  188 19971   0.53%   0.93%
+
+--- Cross-Model Error Overlap ---
+FN overlap (GB ∩ One-Line Rule) : 138 / 188 (73.40% of GB FN)
+FN overlap (GB ∩ LR)            : 119 / 188 (63.30% of GB FN)
+FN overlap (All 3 Models)       : 106 / 188 (56.38% of GB FN)
+FP overlap (GB ∩ LR)            : 97 / 143 (67.83% of GB FP)
+
+================ 2A. FN STRUCTURAL BREAKDOWN (MISSED PHISHING) ================
+   Model (FN Group)  FN Count % https://www. % LenDiff == 7 % Zero Digits % No Query (?/=)
+      One-Line Rule       391        100.00%         25.58%        68.80%           89.00%
+Logistic Regression      5884          1.89%         19.61%        86.18%           99.98%
+  Gradient Boosting       188         73.40%         58.51%        78.72%          100.00%
+
+================ 2B. FP STRUCTURAL BREAKDOWN (FALSE ALARMS) ================
+       Group (Legitimate)  Count % Has Digits Avg URLLength Avg DigitRatio Avg SpecialRatio Avg SubDomain
+All Legitimate (Baseline)  26970        2.64%         26.24         0.0021           0.0481          1.15
+ Logistic Regression (FP)    747       43.51%         29.30         0.0480           0.0826          1.49
+   Gradient Boosting (FP)    143       41.96%         36.22         0.0459           0.0773          1.83
+
+================ 3. FEATURE PROFILE: LOGISTIC REGRESSION ================
+                       TN (Legit OK)  FP (Legit->Phish)  TP (Phish OK)  FN (Phish->Legit)
+URLLength                    26.1499            29.2985        56.9814            32.3668
+DomainLength                 19.1499            22.2985        27.1391            25.1519
+IsDomainIP                    0.0000             0.0000         0.0151             0.0000
+NoOfSubDomain                 1.1453             1.4900         1.0757             1.3078
+HasObfuscation                0.0000             0.0000         0.0085             0.0000
+LetterRatioInURL              0.4779             0.4446         0.6204             0.5216
+DegitRatioInURL               0.0008             0.0480         0.0744             0.0122
+NoOfEqualsInURL               0.0000             0.0000         0.3117             0.0002
+NoOfQMarkInURL                0.0000             0.0000         0.1284             0.0000
+SpacialCharRatioInURL         0.0472             0.0826         0.0919             0.0497
+
+================ 3. FEATURE PROFILE: GRADIENT BOOSTING ================
+                       TN (Legit OK)  FP (Legit->Phish)  TP (Phish OK)  FN (Phish->Legit)
+URLLength                    26.1839            36.2168        49.9970            28.5426
+DomainLength                 19.1839            29.2168        26.6104            21.1064
+IsDomainIP                    0.0000             0.0000         0.0108             0.0000
+NoOfSubDomain                 1.1512             1.8252         1.1421             1.2819
+HasObfuscation                0.0000             0.0000         0.0061             0.0000
+LetterRatioInURL              0.4767             0.5220         0.5924             0.4980
+DegitRatioInURL               0.0019             0.0459         0.0566             0.0155
+NoOfEqualsInURL               0.0000             0.0000         0.2229             0.0000
+NoOfQMarkInURL                0.0000             0.0000         0.0918             0.0000
+SpacialCharRatioInURL         0.0480             0.0773         0.0798             0.0588
+
+--- Top 10 High-Confidence FALSE POSITIVES (LOGISTIC REGRESSION) ---
+                        URL_short  lr_prob  starts_https_www  URLLength  DomainLength  DegitRatioInURL  LetterRatioInURL  SpacialCharRatioInURL
+        https://www.5858-7979.xyz 0.999780              True         24            17            0.333             0.083                  0.083
+          https://www.1920-30.com 0.998544              True         22            15            0.273             0.091                  0.091
+          https://www.6717000.com 0.997373              True         22            15            0.318             0.091                  0.045
+      https://www.t-h-i-n-g-s.com 0.996657              True         26            19            0.000             0.308                  0.231
+        https://www.s-i-m-b-a.org 0.986962              True         24            17            0.000             0.292                  0.208
+         https://www.mil-1553.com 0.982521              True         23            16            0.174             0.217                  0.087
+        https://www.1000-ideen.at 0.981645              True         24            17            0.167             0.250                  0.083
+    https://www.10000steps.org.au 0.979910              True         28            21            0.179             0.321                  0.071
+     https://www.2020-horizon.com 0.977414              True         27            20            0.148             0.333                  0.074
+https://www.stain-removal-101.com 0.976621              True         32            25            0.094             0.438                  0.094
+
+--- Top 10 High-Confidence FALSE NEGATIVES (LOGISTIC REGRESSION) ---
+                                                        URL_short  lr_prob  starts_https_www  URLLength  DomainLength  DegitRatioInURL  LetterRatioInURL  SpacialCharRatioInURL
+http://paypal.com-cgi-bin.webscr.cmd-secure-login.webscr.cmd-home 0.000095             False        576           101            0.141             0.778                  0.069
+http://paypal.com-cgi-bin.webscr.cmd-secure-login.webscr.cmd-home 0.000097             False        110           102            0.000             0.764                  0.173
+http://paypal.com-cgi-bin.webscr.cmd-secure-login.webscr.cmd-home 0.000121             False        457           101            0.070             0.794                  0.120
+http://paypal.com-cgi-bin.webscr.cmd-secure-login.webscr.cmd-home 0.000121             False        457           101            0.070             0.794                  0.120
+http://paypal.com-cgi-bin.webscr.cmd-secure-login.webscr.cmd-home 0.000122             False        456           101            0.068             0.796                  0.121
+                                                  http://www.g.gy 0.004203             False         14             8            0.000             0.143                  0.071
+                                                  http://www.x.gp 0.004203             False         14             8            0.000             0.143                  0.071
+                                                  http://www.u.gp 0.004203             False         14             8            0.000             0.143                  0.071
+                                                  http://www.o.cc 0.004203             False         14             8            0.000             0.143                  0.071
+                                                  http://www.v.vg 0.004203             False         14             8            0.000             0.143                  0.071
+
+--- Top 10 High-Confidence FALSE POSITIVES (GRADIENT BOOSTING) ---
+                                          URL_short  gb_prob  starts_https_www  URLLength  DomainLength  DegitRatioInURL  LetterRatioInURL  SpacialCharRatioInURL
+           https://www.19thcircuitcourt.state.il.us 0.993069              True         39            32            0.051             0.564                  0.077
+               https://www.wedding-planning-101.com 0.991172              True         35            28            0.086             0.486                  0.086
+    https://www.mark-twain.classic-literature.co.uk 0.990024              True         46            39            0.000             0.630                  0.109
+               https://www.paris-berlin-20years.com 0.985405              True         35            28            0.057             0.514                  0.086
+ https://www.collectors-club-of-great-britain.co.uk 0.981730              True         49            42            0.000             0.633                  0.122
+                            https://www.1920-30.com 0.979486              True         22            15            0.273             0.091                  0.091
+           https://www.sweetdreamschildcare24-7.com 0.976161              True         39            32            0.077             0.564                  0.051
+                  https://www.stain-removal-101.com 0.970473              True         32            25            0.094             0.438                  0.094
+https://www.churchmissionarysociety.amdigital.co.uk 0.965125              True         50            43            0.000             0.700                  0.060
+                      https://www.10000steps.org.au 0.964952              True         28            21            0.179             0.321                  0.071
+
+--- Top 10 High-Confidence FALSE NEGATIVES (GRADIENT BOOSTING) ---
+                      URL_short  gb_prob  starts_https_www  URLLength  DomainLength  DegitRatioInURL  LetterRatioInURL  SpacialCharRatioInURL
+  https://www.ambtechonline.com 0.013441              True         28            21              0.0             0.536                  0.036
+  https://www.spresponsible.com 0.013441              True         28            21              0.0             0.536                  0.036
+   https://www.payasosmiami.com 0.013976              True         27            20              0.0             0.519                  0.037
+   https://www.solutionfun.info 0.013976              True         27            20              0.0             0.519                  0.037
+   https://www.tallpullmoby.com 0.013976              True         27            20              0.0             0.519                  0.037
+   https://www.pentahousing.com 0.013976              True         27            20              0.0             0.519                  0.037
+         https://www.eassal.net 0.014083              True         21            14              0.0             0.381                  0.048
+         https://www.linkler.ru 0.014083              True         21            14              0.0             0.381                  0.048
+         https://www.locato.top 0.014083              True         21            14              0.0             0.381                  0.048
+https://www.bendigobaniking.com 0.014320              True         30            23              0.0             0.567                  0.033

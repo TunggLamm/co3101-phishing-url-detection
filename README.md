@@ -24,6 +24,10 @@
 
 ```text
 ├── data/raw/PhiUSIIL_Phishing_URL_Dataset.csv   # Bộ dữ liệu gốc từ UCI (bị chặn trên git)
+├── results/
+│   ├── experiment_run.log                       # Log đầy đủ một lần chạy chốt đồng bộ
+│   ├── metrics.json                             # Số liệu tổng hợp đã khóa cho 4 biểu đồ
+│   └── figures/                                 # 4 biểu đồ chính (300 DPI PNG) cho báo cáo
 ├── src/
 │   ├── data_split.py        # Chia ngẫu nhiên (random_split) & chia tách miền (etld1_split)
 │   ├── features.py          # Kiểm toán 56 cột & trích xuất 10 đặc trưng từ vựng cốt lõi
@@ -34,6 +38,9 @@
 │   ├── train_lr.py          # Baseline 2: Logistic Regression trên 10 đặc trưng từ vựng
 │   ├── train_gb.py          # Baseline 3: Gradient Boosting trên 10 đặc trưng từ vựng
 │   ├── run_ablation.py      # Cắt giảm đặc trưng (50 → 46 → 18 → 10 cột) & kiểm toán rò rỉ đơn cột
+│   ├── error_analysis.py    # Phân tích lỗi FP/FN chéo 3 mô hình & cấu trúc lỗi trên eTLD+1
+│   ├── export_results.py    # Chạy chốt toàn bộ thực nghiệm, lưu log, metrics.json & 4 biểu đồ
+│   ├── plot_figures.py      # Sinh lại nhanh 4 biểu đồ (300 DPI) từ results/metrics.json
 │   └── test/
 │       ├── test_required.py     # Tổng hợp 3 kiểm thử bắt buộc (Tiêu chí A3)
 │       ├── test_data_split.py   # Unit tests cho extract_etld1 & chia dữ liệu không trùng miền
@@ -73,6 +80,20 @@ python src/train_gb.py
 
 ```bash
 python src/run_ablation.py
+```
+
+### 3.4. Phân tích lỗi FP/FN chéo mô hình (`eTLD+1`, `seed = 42`)
+```bash
+python src/error_analysis.py
+```
+
+### 3.5. Xuất Kết quả Chốt (Log, `metrics.json`) & Sinh 4 Biểu đồ Chính
+```bash
+# Chạy chốt toàn bộ thực nghiệm, lưu results/experiment_run.log, results/metrics.json và 4 biểu đồ
+python src/export_results.py
+
+# Chỉ vẽ lại nhanh 4 biểu đồ 300 DPI từ results/metrics.json (không cần huấn luyện lại)
+python src/plot_figures.py
 ```
 
 ---

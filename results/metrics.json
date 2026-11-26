@@ -1,0 +1,727 @@
+{
+  "meta": {
+    "run_timestamp": "2026-11-26 22:42:31",
+    "baseline_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "ablation_seeds": [
+      42
+    ],
+    "error_seed": 42
+  },
+  "baselines": [
+    {
+      "model": "One-Line Rule",
+      "split": "Random Split",
+      "rate_key": "original",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0006
+      ],
+      "PR-AUC": [
+        0.986,
+        0.0007
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "Random Split",
+      "rate_key": "10.00%",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0006
+      ],
+      "PR-AUC": [
+        0.978,
+        0.0011
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "Random Split",
+      "rate_key": "5.00%",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0006
+      ],
+      "PR-AUC": [
+        0.9768,
+        0.0012
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "Random Split",
+      "rate_key": "1.00%",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0006
+      ],
+      "PR-AUC": [
+        0.9758,
+        0.0012
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "eTLD+1 Split",
+      "rate_key": "original",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0028
+      ],
+      "PR-AUC": [
+        0.986,
+        0.0032
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "eTLD+1 Split",
+      "rate_key": "10.00%",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0028
+      ],
+      "PR-AUC": [
+        0.978,
+        0.005
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "eTLD+1 Split",
+      "rate_key": "5.00%",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0028
+      ],
+      "PR-AUC": [
+        0.9768,
+        0.0053
+      ]
+    },
+    {
+      "model": "One-Line Rule",
+      "split": "eTLD+1 Split",
+      "rate_key": "1.00%",
+      "Precision": [
+        1.0,
+        0.0
+      ],
+      "F1-score": [
+        0.9876,
+        0.0028
+      ],
+      "PR-AUC": [
+        0.9758,
+        0.0055
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "Random Split",
+      "rate_key": "original",
+      "Precision": [
+        0.9471,
+        0.0015
+      ],
+      "F1-score": [
+        0.8202,
+        0.0033
+      ],
+      "PR-AUC": [
+        0.9153,
+        0.0011
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "Random Split",
+      "rate_key": "10.00%",
+      "Precision": [
+        0.7278,
+        0.0049
+      ],
+      "F1-score": [
+        0.7255,
+        0.0025
+      ],
+      "PR-AUC": [
+        0.7932,
+        0.0022
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "Random Split",
+      "rate_key": "5.00%",
+      "Precision": [
+        0.5587,
+        0.0072
+      ],
+      "F1-score": [
+        0.6304,
+        0.0041
+      ],
+      "PR-AUC": [
+        0.7449,
+        0.003
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "Random Split",
+      "rate_key": "1.00%",
+      "Precision": [
+        0.1949,
+        0.0049
+      ],
+      "F1-score": [
+        0.307,
+        0.0059
+      ],
+      "PR-AUC": [
+        0.6543,
+        0.0068
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "eTLD+1 Split",
+      "rate_key": "original",
+      "Precision": [
+        0.9475,
+        0.0055
+      ],
+      "F1-score": [
+        0.8119,
+        0.0159
+      ],
+      "PR-AUC": [
+        0.9116,
+        0.0068
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "eTLD+1 Split",
+      "rate_key": "10.00%",
+      "Precision": [
+        0.7287,
+        0.0228
+      ],
+      "F1-score": [
+        0.7191,
+        0.0095
+      ],
+      "PR-AUC": [
+        0.7857,
+        0.0154
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "eTLD+1 Split",
+      "rate_key": "5.00%",
+      "Precision": [
+        0.5592,
+        0.0279
+      ],
+      "F1-score": [
+        0.6253,
+        0.0126
+      ],
+      "PR-AUC": [
+        0.7367,
+        0.0187
+      ]
+    },
+    {
+      "model": "Logistic Regression",
+      "split": "eTLD+1 Split",
+      "rate_key": "1.00%",
+      "Precision": [
+        0.1971,
+        0.0185
+      ],
+      "F1-score": [
+        0.3082,
+        0.0212
+      ],
+      "PR-AUC": [
+        0.6492,
+        0.0224
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "Random Split",
+      "rate_key": "original",
+      "Precision": [
+        0.9929,
+        0.0007
+      ],
+      "F1-score": [
+        0.9916,
+        0.0006
+      ],
+      "PR-AUC": [
+        0.9982,
+        0.0003
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "Random Split",
+      "rate_key": "10.00%",
+      "Precision": [
+        0.9536,
+        0.005
+      ],
+      "F1-score": [
+        0.9716,
+        0.0027
+      ],
+      "PR-AUC": [
+        0.9937,
+        0.0009
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "Random Split",
+      "rate_key": "5.00%",
+      "Precision": [
+        0.9074,
+        0.0093
+      ],
+      "F1-score": [
+        0.947,
+        0.005
+      ],
+      "PR-AUC": [
+        0.9898,
+        0.0015
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "Random Split",
+      "rate_key": "1.00%",
+      "Precision": [
+        0.6544,
+        0.0235
+      ],
+      "F1-score": [
+        0.788,
+        0.0168
+      ],
+      "PR-AUC": [
+        0.966,
+        0.0051
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "eTLD+1 Split",
+      "rate_key": "original",
+      "Precision": [
+        0.9932,
+        0.001
+      ],
+      "F1-score": [
+        0.9918,
+        0.0009
+      ],
+      "PR-AUC": [
+        0.9981,
+        0.0002
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "eTLD+1 Split",
+      "rate_key": "10.00%",
+      "Precision": [
+        0.9562,
+        0.0078
+      ],
+      "F1-score": [
+        0.973,
+        0.0042
+      ],
+      "PR-AUC": [
+        0.9935,
+        0.0008
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "eTLD+1 Split",
+      "rate_key": "5.00%",
+      "Precision": [
+        0.9115,
+        0.0144
+      ],
+      "F1-score": [
+        0.9493,
+        0.0079
+      ],
+      "PR-AUC": [
+        0.9893,
+        0.0015
+      ]
+    },
+    {
+      "model": "Gradient Boosting",
+      "split": "eTLD+1 Split",
+      "rate_key": "1.00%",
+      "Precision": [
+        0.6632,
+        0.0326
+      ],
+      "F1-score": [
+        0.7942,
+        0.0232
+      ],
+      "PR-AUC": [
+        0.9637,
+        0.0059
+      ]
+    }
+  ],
+  "ablation": {
+    "Logistic Regression": [
+      {
+        "stage": "1. Full Numeric (50 cols)",
+        "cols": 50,
+        "f1_orig": [
+          0.9999,
+          0.0
+        ],
+        "f1_1pct": [
+          0.9999,
+          0.0
+        ]
+      },
+      {
+        "stage": "2. No Label Leakage (46 cols)",
+        "cols": 46,
+        "f1_orig": [
+          0.9964,
+          0.0
+        ],
+        "f1_1pct": [
+          0.8919,
+          0.0
+        ]
+      },
+      {
+        "stage": "3. All Lexical / No HTML (18 cols)",
+        "cols": 18,
+        "f1_orig": [
+          0.9745,
+          0.0
+        ],
+        "f1_1pct": [
+          0.8422,
+          0.0
+        ]
+      },
+      {
+        "stage": "4. Core Lexical (10 cols)",
+        "cols": 10,
+        "f1_orig": [
+          0.8115,
+          0.0
+        ],
+        "f1_1pct": [
+          0.3191,
+          0.0
+        ]
+      }
+    ],
+    "Gradient Boosting": [
+      {
+        "stage": "1. Full Numeric (50 cols)",
+        "cols": 50,
+        "f1_orig": [
+          1.0,
+          0.0
+        ],
+        "f1_1pct": [
+          1.0,
+          0.0
+        ]
+      },
+      {
+        "stage": "2. No Label Leakage (46 cols)",
+        "cols": 46,
+        "f1_orig": [
+          0.999,
+          0.0
+        ],
+        "f1_1pct": [
+          0.9764,
+          0.0
+        ]
+      },
+      {
+        "stage": "3. All Lexical / No HTML (18 cols)",
+        "cols": 18,
+        "f1_orig": [
+          0.9907,
+          0.0
+        ],
+        "f1_1pct": [
+          0.7631,
+          0.0
+        ]
+      },
+      {
+        "stage": "4. Core Lexical (10 cols)",
+        "cols": 10,
+        "f1_orig": [
+          0.9918,
+          0.0
+        ],
+        "f1_1pct": [
+          0.7869,
+          0.0
+        ]
+      }
+    ]
+  },
+  "single_leakage": [
+    {
+      "feature": "IsHTTPS",
+      "f1": [
+        0.6154,
+        0.0
+      ],
+      "pr_auc": [
+        0.6821,
+        0.0
+      ]
+    },
+    {
+      "feature": "URLSimilarityIndex",
+      "f1": [
+        0.9957,
+        0.0
+      ],
+      "pr_auc": [
+        0.9955,
+        0.0
+      ]
+    },
+    {
+      "feature": "TLDLegitimateProb",
+      "f1": [
+        0.0,
+        0.0
+      ],
+      "pr_auc": [
+        0.5322,
+        0.0
+      ]
+    },
+    {
+      "feature": "URLCharProb",
+      "f1": [
+        0.6009,
+        0.0
+      ],
+      "pr_auc": [
+        0.7153,
+        0.0
+      ]
+    }
+  ],
+  "feature_importance": {
+    "gb": [
+      {
+        "feature": "URLLength",
+        "mean": 0.1752,
+        "hw": 0.0136,
+        "share_pct": 17.52
+      },
+      {
+        "feature": "DomainLength",
+        "mean": 0.019,
+        "hw": 0.0047,
+        "share_pct": 1.9
+      },
+      {
+        "feature": "IsDomainIP",
+        "mean": 0.0,
+        "hw": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "feature": "NoOfSubDomain",
+        "mean": 0.0364,
+        "hw": 0.0036,
+        "share_pct": 3.64
+      },
+      {
+        "feature": "HasObfuscation",
+        "mean": 0.0,
+        "hw": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "feature": "LetterRatioInURL",
+        "mean": 0.2989,
+        "hw": 0.0106,
+        "share_pct": 29.89
+      },
+      {
+        "feature": "DegitRatioInURL",
+        "mean": 0.3059,
+        "hw": 0.0078,
+        "share_pct": 30.59
+      },
+      {
+        "feature": "NoOfEqualsInURL",
+        "mean": 0.0,
+        "hw": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "feature": "NoOfQMarkInURL",
+        "mean": 0.0,
+        "hw": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "feature": "SpacialCharRatioInURL",
+        "mean": 0.1645,
+        "hw": 0.0201,
+        "share_pct": 16.45
+      }
+    ],
+    "lr": [
+      {
+        "feature": "URLLength",
+        "mean": -0.0857,
+        "hw": 0.0128
+      },
+      {
+        "feature": "DomainLength",
+        "mean": -1.3796,
+        "hw": 0.1634
+      },
+      {
+        "feature": "IsDomainIP",
+        "mean": 0.0295,
+        "hw": 0.0169
+      },
+      {
+        "feature": "NoOfSubDomain",
+        "mean": -0.4685,
+        "hw": 0.0174
+      },
+      {
+        "feature": "HasObfuscation",
+        "mean": 0.3391,
+        "hw": 0.0782
+      },
+      {
+        "feature": "LetterRatioInURL",
+        "mean": 2.5047,
+        "hw": 0.14
+      },
+      {
+        "feature": "DegitRatioInURL",
+        "mean": 3.3789,
+        "hw": 0.1551
+      },
+      {
+        "feature": "NoOfEqualsInURL",
+        "mean": 0.2869,
+        "hw": 0.0439
+      },
+      {
+        "feature": "NoOfQMarkInURL",
+        "mean": 1.2814,
+        "hw": 0.2973
+      },
+      {
+        "feature": "SpacialCharRatioInURL",
+        "mean": 1.9181,
+        "hw": 0.0704
+      }
+    ]
+  },
+  "errors": {
+    "counts": [
+      {
+        "model": "One-Line Rule",
+        "fp": 0,
+        "fn": 391,
+        "fpr_pct": 0.0,
+        "fnr_pct": 1.94
+      },
+      {
+        "model": "Logistic Regression",
+        "fp": 747,
+        "fn": 5884,
+        "fpr_pct": 2.77,
+        "fnr_pct": 29.19
+      },
+      {
+        "model": "Gradient Boosting",
+        "fp": 143,
+        "fn": 188,
+        "fpr_pct": 0.53,
+        "fnr_pct": 0.93
+      }
+    ],
+    "overlap_pct": {
+      "gb_rule_fn": 73.4,
+      "gb_lr_fn": 63.3,
+      "all3_fn": 56.38,
+      "gb_lr_fp": 67.83
+    },
+    "fn_traits_pct": {
+      "gb_https_www": 73.4,
+      "gb_len_diff_7": 58.51,
+      "gb_zero_digits": 78.72,
+      "lr_zero_digits": 86.18
+    }
+  }
+}
